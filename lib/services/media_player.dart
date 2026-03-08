@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:yt_music/ytmusic.dart';
 
 import '../utils/add_history.dart';
+import 'file_storage.dart';
 import 'settings_manager.dart';
 
 class MediaPlayer extends ChangeNotifier {
@@ -314,8 +316,14 @@ class MediaPlayer extends ChangeNotifier {
         song['path'] != null &&
         (await File(song['path']).exists());
 
+    File? file = await GetIt.I<FileStorage>().checkIfExists(song);
+
     if (isDownloaded) {
       return AudioSource.file(song['path'], tag: tag);
+    } else if (file != null) {
+      return AudioSource.file(file.path, tag: tag);
+    } else if (file != null) {
+      return AudioSource.file(file.path, tag: tag);
     } else {
       return YouTubeAudioSource(
         videoId: song['videoId'],

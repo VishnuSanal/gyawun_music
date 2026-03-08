@@ -151,6 +151,31 @@ class FileStorage {
     }
   }
 
+  Future<File?> checkIfExists(Map song, {extension = 'm4a'}) async {
+    String fileName = song['title'];
+
+    final RegExp avoid = RegExp(r'[\.\\\*\:\(\)\"\?#/;\|]');
+    fileName = fileName.replaceAll(avoid, '').replaceAll("'", '');
+
+    if (!(await requestPermissions())) return null;
+
+    Directory directory = await _getDirectory(storagePaths.musicPath);
+
+    File file = File(path.join(directory.path, '$fileName.$extension'));
+
+    if (await file.exists()) {
+      return file;
+    }
+
+    file = File(path.join(directory.path, '$fileName - ${song['artists'][0]['name']}.$extension'));
+
+    if (await file.exists()) {
+      return file;
+    }
+
+    return null;
+  }
+
   Future<bool> loadBackup() async {
     if (!(await requestPermissions())) return false;
     FilePickerResult? picker = await FilePicker.platform.pickFiles(

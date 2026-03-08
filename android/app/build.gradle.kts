@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.jhelum.gyawun"
+        applicationId = "com.jhelum.gyawun.debug"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
